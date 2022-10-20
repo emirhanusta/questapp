@@ -18,11 +18,11 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="post")
+@Table(name="posts")
 public class Post {
 
 	@Id
-	private Long id;
+	Long id;
 	
 	@ManyToOne(fetch= FetchType.LAZY)
 	@JoinColumn(name="user_id",nullable=false)
@@ -30,9 +30,8 @@ public class Post {
 	@JsonIgnore
 	User user;
 	
-	private String title;
+	String title;
 	
-	@Lob
-	@Column(columnDefinition="text")
-	private String text;
+
+	String text;
 }

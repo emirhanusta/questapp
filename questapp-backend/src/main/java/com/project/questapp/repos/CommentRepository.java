@@ -8,7 +8,7 @@ import com.project.questapp.entities.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment,Long>{
 
-	List<Comment> finByUserIdAndPostId(Long userId, Long postId);
+	List<Comment> findByUserIdAndPostId(Long userId, Long postId);
 
 	List<Comment> findByUserId(Long userId);
 

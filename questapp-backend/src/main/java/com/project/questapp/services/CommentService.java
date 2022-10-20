@@ -31,7 +31,7 @@ public class CommentService {
 	public List<Comment> getAllCommentsWithParam(Optional<Long> userId, Optional<Long> postId) {
 		
 		if (userId.isPresent() && postId.isPresent()) {
-			return commentRepository.finByUserIdAndPostId(userId.get(),postId.get());
+			return commentRepository.findByUserIdAndPostId(userId.get(),postId.get());
 		}
 		else if (userId.isPresent()) {
 			return commentRepository.findByUserId(userId.get());

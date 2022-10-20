@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="comment")
+@Table(name="comments")
 public class Comment {
 
 	@Id
@@ -37,8 +37,7 @@ public class Comment {
 	@JsonIgnore
 	User user;
 	
-	@Lob
-	@Column(columnDefinition="text")
+	
 	private String text;
 
 	public void setCreateDate(Date date) {

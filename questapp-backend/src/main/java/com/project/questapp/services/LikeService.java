@@ -27,7 +27,7 @@ public class LikeService {
 	public List<Like> getAllLikesWithParam(Optional<Long> userId, Optional<Long> postId) {
 		
 		if (userId.isPresent() && postId.isPresent()) {
-			return likeRepository.finByUserIdAndPostId(userId.get(),postId.get());
+			return likeRepository.findByUserIdAndPostId(userId.get(),postId.get());
 		}
 		else if (userId.isPresent()) {
 			return likeRepository.findByUserId(userId.get());

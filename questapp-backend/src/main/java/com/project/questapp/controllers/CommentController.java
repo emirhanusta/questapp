@@ -3,6 +3,7 @@ package com.project.questapp.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import com.project.questapp.services.CommentService;
 public class CommentController {
 
 	private CommentService commentService;
-
+	@Autowired
 	public CommentController(CommentService commentService) {
 		this.commentService = commentService;
 	}
