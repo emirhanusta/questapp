@@ -65,7 +65,7 @@ function PostForm(props) {
             }),
         })
         .then((res)=>res.json())
-        .catch((err)=> console.log("error"))
+        .catch((err)=> console.log(err))
     }
 
     const handleSubmit=()=>{

@@ -1,7 +1,6 @@
 import React,{useState, useEffect} from "react";
 import Post from '../Post/Post'
 import {makeStyles} from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
 import PostForm from "../Post/PostForm";
 
 const useStyles=makeStyles((theme)=>({
@@ -50,7 +49,7 @@ export default function Home() {
             <div fixed className={classes.container}>
                 <PostForm userName="name" userId={1} refreshPost={refreshPost}/>
                 {postList.map(post=>(
-                        <Post likes={pos} postId={post.id} userName={post.userName} userId={post.userId} title={post.title} text={post.text} ></Post>                       
+                        <Post likes={post.postLikes} postId={post.id} userName={post.userName} userId={post.userId} title={post.title} text={post.text} ></Post>                       
                         )
                     )
                 }
