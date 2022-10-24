@@ -3,9 +3,10 @@ package com.project.questapp.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -22,6 +23,8 @@ import lombok.Data;
 public class Post {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	Long id;
 	
 	@ManyToOne(fetch= FetchType.LAZY)
@@ -29,9 +32,9 @@ public class Post {
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	@JsonIgnore
 	User user;
-	
+	@Column(name="title")
 	String title;
 	
-
+	@Column(name="text")
 	String text;
 }
