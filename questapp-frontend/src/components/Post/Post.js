@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,isInitialMount,useEffect } from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -9,11 +9,14 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from 'react-router-dom'
+import { useRef } from "react";
+import Comment from "../Comment/Comment";
+import Container from '@material-ui/core/Container';
+import CommentForm from "../Comment/CommentForm";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,16 +46,47 @@ const useStyles = makeStyles((theme) => ({
 
 function Post(props) {
 
-    const {title,text,userName,userId}=props;
+    const {title,text,userName,userId,postId}=props;
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const [liked, setLiked]=useState(false);
+    const [error, setError]= useState(null);
+    const [isLoaded, setIsLoaded]= useState(false);
+    const [commentList, setCommentList]= useState([]);
+    const isInitialMount=useRef(true);
+
     const handleExpandClick = () => {
       setExpanded(!expanded);
+      refreshComments();
+      console.log(commentList);
     };
+
     const handleLike=()=>{
       setLiked(!liked);
     }
+
+    const refreshComments = () => {
+      fetch("/comments?postId="+postId) 
+      .then(res=>res.json())
+      .then(
+          (result)=>{
+              setIsLoaded(true);
+              setCommentList(result);
+          },
+          (error)=>{
+              setIsLoaded(true);
+              setError(error);
+          }
+      )
+  }
+
+  useEffect(()=>{
+    if (isInitialMount.current) {
+      isInitialMount.current=false;
+    } else 
+      refreshComments()
+},[commentList])
+
     return(
         <div className="postContainer">
           <Card className={classes.root}>
@@ -93,8 +127,13 @@ function Post(props) {
                 </IconButton>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                </CardContent>
+                <Container fixed className={classes.container}>
+                {error? "error" :
+                    isLoaded? commentList.map(comment => (
+                      <Comment userId = {1} userName = {"user"} text = {comment.text}></Comment>
+                    )) : "Loading"}
+                    <CommentForm userId = {1} userName = {"user"} postId = {postId}></CommentForm>
+                </Container>
             </Collapse>
             </Card>
         </div>

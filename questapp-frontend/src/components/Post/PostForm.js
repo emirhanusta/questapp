@@ -115,13 +115,13 @@ function PostForm(props) {
                     <MoreVertIcon />
                 </IconButton>
                 }
-                title={<OutlinedInput                    id="outlined-adornment-amount" multiline placeholder="Title" value={title} inputProps={{maxLength: 25}} fullWidth onChange={(i)=>handleTitle(i.target.value)}>
+                title={<OutlinedInput id="outlined-adornment-amount" multiline placeholder="Title" value={title} inputProps={{maxLength: 25}} fullWidth onChange={(i)=>handleTitle(i.target.value)}>
 
                 </OutlinedInput>}
             />
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
-                {<OutlinedInput                    id="outlined-adornment-amount" multiline placeholder="Text" inputProps={{maxLength: 250}} fullWidth onChange={(i)=>handleText(i.target.value)} value={text} endAdornment={
+                {<OutlinedInput id="outlined-adornment-amount" multiline placeholder="Text" inputProps={{maxLength: 250}} fullWidth onChange={(i)=>handleText(i.target.value)} value={text} endAdornment={
                     <InputAdornment position="end">
                         <Button variant="contained" style = {{background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                         color: 'white'}} onClick={handleSubmit}>
