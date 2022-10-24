@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.questapp.entities.Like;
 import com.project.questapp.requests.LikeCreateRequest;
+import com.project.questapp.responses.LikeResponse;
 import com.project.questapp.services.LikeService;
-
+ 
 @RestController
 @RequestMapping("/likes")
 public class LikeController {
@@ -25,7 +26,7 @@ public class LikeController {
 		this.likeService = likeService;
 	}
 	@GetMapping
-	public List<Like> getAllLikes(@RequestParam Optional<Long> userId,@RequestParam Optional<Long> postId){
+	public List<LikeResponse> getAllLikes(@RequestParam Optional<Long> userId,@RequestParam Optional<Long> postId){
 		return likeService.getAllLikesWithParam(userId,postId);
 	}
 	@GetMapping("/{likeId}")
