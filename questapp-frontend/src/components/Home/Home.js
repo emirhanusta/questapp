@@ -20,7 +20,7 @@ export default function Home() {
     const [postList, setPostList]= useState([]);
     const classes = useStyles();
 
-    const refreshPost = () => {
+    const refreshPosts = () => {
         fetch("/posts") 
         .then(res=>res.json())
         .then(
@@ -36,7 +36,7 @@ export default function Home() {
     }
 
     useEffect(()=>{
-        refreshPost()
+        refreshPosts()
     },[postList])
 
 
@@ -46,14 +46,14 @@ export default function Home() {
         return <div>LOADİNG ...</div>
     }else{
         return(
-            <div fixed className={classes.container}>
-                <PostForm userName="name" userId={1} refreshPost={refreshPost}/>
-                {postList.map(post=>(
-                        <Post likes={post.postLikes} postId={post.id} userName={post.userName} userId={post.userId} title={post.title} text={post.text} ></Post>                       
-                        )
-                    )
-                }
-           </div> 
+            <div className = {classes.container}>
+                {localStorage.getItem("currentUser") == null? "":
+                <PostForm userId = {localStorage.getItem("currentUser")} userName = {localStorage.getItem("userName")}  refreshPosts = {refreshPosts}/>}
+                   {postList.map(post => (
+                    <Post likes = {post.postLikes} postId = {post.id} userId = {post.userId} userName = {post.userName}  
+                    title={post.title} text={post.text}></Post>
+                ))}
+            </div>
         )
     }
 }
