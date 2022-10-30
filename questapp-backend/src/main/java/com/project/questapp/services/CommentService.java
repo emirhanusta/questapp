@@ -3,10 +3,9 @@ package com.project.questapp.services;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.project.questapp.entities.Comment;
 import com.project.questapp.entities.Post;
@@ -14,6 +13,7 @@ import com.project.questapp.entities.User;
 import com.project.questapp.repos.CommentRepository;
 import com.project.questapp.requests.CommentCreateRequest;
 import com.project.questapp.requests.CommentUpdateRequest;
+import com.project.questapp.responses.CommentResponse;
 
 @Service
 public class CommentService {
@@ -22,25 +22,24 @@ public class CommentService {
 	private UserService userService;
 	private PostService postService;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, PostService postService) {
+	public CommentService(CommentRepository commentRepository, UserService userService, 
+			PostService postService) {
 		this.commentRepository = commentRepository;
 		this.userService = userService;
 		this.postService = postService;
 	}
 
-	public List<Comment> getAllCommentsWithParam(Optional<Long> userId, Optional<Long> postId) {
-		
-		if (userId.isPresent() && postId.isPresent()) {
-			return commentRepository.findByUserIdAndPostId(userId.get(),postId.get());
-		}
-		else if (userId.isPresent()) {
-			return commentRepository.findByUserId(userId.get());
-		}
-		else if (postId.isPresent()) {
-			return commentRepository.findByPostId(postId.get());
-		}
-		else
-		return commentRepository.findAll();
+	public List<CommentResponse> getAllCommentsWithParam(Optional<Long> userId, Optional<Long> postId) {
+		List<Comment> comments;
+		if(userId.isPresent() && postId.isPresent()) {
+			comments = commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
+		}else if(userId.isPresent()) {
+			comments = commentRepository.findByUserId(userId.get());
+		}else if(postId.isPresent()) {
+			comments = commentRepository.findByPostId(postId.get());
+		}else
+			comments = commentRepository.findAll();
+		return comments.stream().map(comment -> new CommentResponse(comment)).collect(Collectors.toList());
 	}
 
 	public Comment getOneCommentById(Long commentId) {
@@ -76,5 +75,5 @@ public class CommentService {
 		commentRepository.deleteById(commentId);
 	}
 	
-
+	
 }
