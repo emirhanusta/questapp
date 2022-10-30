@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CardContent, InputAdornment, OutlinedInput, Avatar} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { PostWithAuth } from "../../services/HttpService";
 
 const useStyles = makeStyles((theme) => ({
     comment : {
@@ -24,29 +25,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Comment(props) {
  
-    const { userId, userName,postId} = props;
+    const { userId, userName,postId,setCommentRefresh} = props;
     const classes = useStyles();
     const [text, setText] = useState("");
+
+
     const saveComment = () => {
-        fetch("/comments",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("tokenKey"),
-            },
-            body: JSON.stringify({
+        PostWithAuth("comment", {
                 postId: postId,
                 userId: userId,
                 text: text,
-            }),
-        })
+            })        
         .then((res)=>res.json())
         .catch((err)=> console.log("error"))
     }
+
     const handleSubmit = () => {
       saveComment(); 
       setText("");
+      setCommentRefresh();
     }
     const handleChange = (value) => {
         setText(value);

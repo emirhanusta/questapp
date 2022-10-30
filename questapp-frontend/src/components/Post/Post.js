@@ -1,5 +1,6 @@
-import React, { useState,useRef,useEffect } from "react";
-import {makeStyles} from '@material-ui/core/styles';
+import React, {useState, useRef, useEffect} from "react";
+import {Link} from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -9,18 +10,18 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/Comment';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import {Link} from 'react-router-dom'
 import Comment from "../Comment/Comment";
-import Container from '@material-ui/core/Container';
 import CommentForm from "../Comment/CommentForm";
+import { PostWithAuth, DeleteWithAuth } from "../../services/HttpService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      maxWidth: 500,
-      margin: 20,
+      width: 800,
+      textAlign : "left",
+      margin : 20
     },
     media: {
       height: 0,
@@ -34,35 +35,37 @@ const useStyles = makeStyles((theme) => ({
       }),
     },
     avatar: {
-      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)'
+      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
     },
-    link:{
-      textDecoration:"none",
-      boxShadow:"none",
-      color: "white"
-    },
+    link: {
+        textDecoration : "none",
+        boxShadow : "none",
+        color : "white"
+    }
   }));
 
 function Post(props) {
-
-    const {title,text,userName,userId,postId,likes}=props;
-    const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-    const [error, setError]= useState(null);
-    const [isLoaded, setIsLoaded]= useState(false);
-    const [commentList, setCommentList]= useState([]);
-    const [isLiked, setIsLiked] = useState(false);
-    const isInitialMount = useRef(true);
-    const [likeCount, setLikeCount] = useState(likes.length);
-    const [likeId, setLikeId] = useState(null);
-
-    let disabled = localStorage.getItem("currentUser") == null ? true:false;
-
-    const handleExpandClick = () => {
-      setExpanded(!expanded);
-      refreshComments();
-      console.log(commentList);
-    };
+   const {title, text, userId, userName, postId, likes} = props;
+   const classes = useStyles();
+   const [expanded, setExpanded] = useState(false);
+   const [error, setError] = useState(null);
+   const [isLoaded, setIsLoaded] = useState(false);
+   const [commentList, setCommentList] = useState([]);
+   const [isLiked, setIsLiked] = useState(false);
+   const isInitialMount = useRef(true);
+   const [likeCount, setLikeCount] = useState(likes.length);
+   const [likeId, setLikeId] = useState(null);
+   const [refresh, setRefresh] = useState(false);
+   let disabled = localStorage.getItem("currentUser") == null ? true:false;
+   
+   const setCommentRefresh = () => {
+     setRefresh(true);
+   }
+   const handleExpandClick = () => {
+     setExpanded(!expanded);
+     refreshComments();
+     console.log(commentList);
+   };
 
    const handleLike = () => {
     setIsLiked(!isLiked);
@@ -73,48 +76,39 @@ function Post(props) {
     else{
       deleteLike();
       setLikeCount(likeCount - 1)
-    }    
+    }
+      
    }
-
+   
    const refreshComments = () => {
-      fetch("/comments?postId="+postId) 
-      .then(res=>res.json())
-      .then(
-          (result)=>{
-              setIsLoaded(true);
-              setCommentList(result);
-          },
-          (error)=>{
-              console.log(error)
-              setIsLoaded(true);
-              setError(error);
-          }
-      )
+    fetch("/comments?postId="+postId)
+    .then(res => res.json())
+    .then(
+        (result) => {
+            setIsLoaded(true);
+            setCommentList(result)
+        },
+        (error) => {
+            console.log(error)
+            setIsLoaded(true);
+            setError(error);
+        }
+    )
+
+    setRefresh(false)
   }
 
   const saveLike = () => {
-    fetch("/likes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : localStorage.getItem("tokenKey"),
-      },
-      body: JSON.stringify({
-        postId: postId, 
-        userId : localStorage.getItem("currentUser"),
-      }),
+    PostWithAuth("/likes",{
+      postId: postId, 
+      userId : localStorage.getItem("currentUser"),
     })
       .then((res) => res.json())
       .catch((err) => console.log(err))
   }
 
   const deleteLike = () => {
-    fetch("/likes/"+likeId,{
-      method: "DELETE",
-      headers: {
-        "Authorization" : localStorage.getItem("tokenKey"),
-      },
-    })
+    DeleteWithAuth("/likes/"+likeId)
       .catch((err) => console.log(err))
   }
 
@@ -125,41 +119,34 @@ function Post(props) {
       setIsLiked(true);
     }
   }
+  useEffect(() => {
+    if(isInitialMount.current)
+      isInitialMount.current = false;
+    else
+      refreshComments();
+  }, [refresh])
 
-  useEffect(()=>{
-    if (isInitialMount.current) {
-      isInitialMount.current=false;
-    } else 
-      refreshComments()
-},[commentList])
+  useEffect(() => {checkLikes()},[])
 
-useEffect(() => {checkLikes()},[])
-
-    return(
-        <div className="postContainer">
-          <Card className={classes.root}>
-            <CardHeader
-                avatar={
-                  <Link className={classes.link} to={{pathname: '/users/'+userId}}>
+   return(
+           <Card className={classes.root}>
+                <CardHeader
+                    avatar={
+                    <Link  className={classes.link} to={{pathname : '/users/' + userId}}>
                     <Avatar aria-label="recipe" className={classes.avatar}>
-                    {userName.charAt(0).toUpperCase()}
+                        {userName.charAt(0).toUpperCase()}
                     </Avatar>
-                  </Link>
-                }
-                action={
-                <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                </IconButton>
-                }
-                title={title}
-            />
-            <CardContent>
-                <Typography variant="body2" color="textSecondary" component="p">
-                {text}
-                </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-            {disabled ?                    
+                    </Link>
+                    }
+                    title={title}
+                />
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                    {text}
+                    </Typography>
+                </CardContent>
+                <CardActions disableSpacing>
+                  {disabled ?                    
                   <IconButton 
                     disabled
                     onClick={handleLike}
@@ -167,35 +154,37 @@ useEffect(() => {checkLikes()},[])
                     >
                     <FavoriteIcon style={isLiked? { color: "red" } : null} />
                     </IconButton> :
-              
-                <IconButton aria-label="add to favorites" onClick={handleLike}>
-                <FavoriteIcon style={isLiked ? {color: "red" }:null}/>
-                </IconButton>
-    }
-                {likeCount}
-                <IconButton
-                className={clsx(classes.expand, {
-                    [classes.expandOpen]: expanded,
-                })}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-                >
-                <CommentIcon />
-                </IconButton>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <IconButton 
+                    onClick={handleLike}
+                    aria-label="add to favorites"
+                    >
+                    <FavoriteIcon style={isLiked? { color: "red" } : null} />
+                    </IconButton>
+                  }
+                    {likeCount}
+                    <IconButton
+                    className={clsx(classes.expand, {
+                        [classes.expandOpen]: expanded,
+                    })}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                    >
+                    <CommentIcon />
+                    </IconButton>
+                </CardActions>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <Container fixed className = {classes.container}>
                     {error? "error" :
                     isLoaded? commentList.map(comment => (
                       <Comment userId = {comment.userId} userName = {comment.userName} text = {comment.text}></Comment>
                     )) : "Loading"}
                     {disabled? "":
-                    <CommentForm userId = {userId} userName = {userName} postId = {postId}></CommentForm>}
+                    <CommentForm userId = {localStorage.getItem("currentUser")} userName = {localStorage.getItem("userName")} postId = {postId} setCommentRefresh={setCommentRefresh}></CommentForm>}
                     </Container>
                 </Collapse>
-            </Card>
-        </div>
-    )
+                </Card>
+   )
 }
-export default  Post;
+
+export default Post;
