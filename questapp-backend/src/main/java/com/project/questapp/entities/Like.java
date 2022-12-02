@@ -17,24 +17,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name="likes")
+@Data
 public class Like {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-
-	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name="post_id",nullable=false)
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="post_id", nullable=false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	Post post;
-	
-	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name="user_id",nullable=false)
-	@OnDelete(action=OnDeleteAction.CASCADE)
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id", nullable=false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	User user;
-
 }

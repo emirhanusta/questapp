@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -21,31 +23,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name="comments")
+@Data
 public class Comment {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
-	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name="post_id",nullable=false)
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="post_id", nullable=false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	Post post;
-	
-	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name="user_id",nullable=false)
-	@OnDelete(action=OnDeleteAction.CASCADE)
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id", nullable=false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	User user;
-	
-	
-	private String text;
 
-	public void setCreateDate(Date date) {
-		// TODO Auto-generated method stub
-		
-	}
+	//@Lob
+	@Column(columnDefinition="text")
+	String text;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	Date createDate;
 }
