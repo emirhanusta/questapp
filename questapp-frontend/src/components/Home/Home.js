@@ -1,51 +1,54 @@
-import React,{useState, useEffect} from "react";
-import Post from '../Post/Post'
-import {makeStyles} from '@material-ui/core/styles'
+import React, {useState, useEffect} from "react";
+import Post from '../Post/Post';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 import PostForm from "../Post/PostForm";
 
-const useStyles=makeStyles((theme)=>({
-    container:{
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: "flex",
+        flexWrap: "wrap",
         justifyContent : "center",
         alignItems : "center",
-        display: "block",
-        padding: "10px",
-        //backgroundColor:"#d5ebe9",
-        
+        //backgroundColor: '#f0f5ff',
     }
-}))
+}));
 
 export default function Home() {
-    const [error, setError]= useState(null);
-    const [isLoaded, setIsLoaded]= useState(false);
-    const [postList, setPostList]= useState([]);
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [postList, setPostList] = useState([]);
     const classes = useStyles();
 
+
     const refreshPosts = () => {
-        fetch("/posts") 
-        .then(res=>res.json())
+        fetch("/posts")
+        .then(res => res.json())
         .then(
-            (result)=>{
+            (result) => {
                 setIsLoaded(true);
-                setPostList(result);
+                setPostList(result)
             },
-            (error)=>{
+            (error) => {
+                console.log(error)
                 setIsLoaded(true);
                 setError(error);
             }
         )
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         refreshPosts()
-    },[postList])
+    }, [])
 
-
-    if (error) { 
-        return <div>ERROR !!!</div>
-    }else if (!isLoaded) {
-        return <div>LOADİNG ...</div>
-    }else{
+    if(error) {
+        return <div> Error !!!</div>;
+    } else if(!isLoaded) {
+        return <div> Loading... </div>;
+    } else {
         return(
+
             <div className = {classes.container}>
                 {localStorage.getItem("currentUser") == null? "":
                 <PostForm userId = {localStorage.getItem("currentUser")} userName = {localStorage.getItem("userName")}  refreshPosts = {refreshPosts}/>}
@@ -54,6 +57,6 @@ export default function Home() {
                     title={post.title} text={post.text}></Post>
                 ))}
             </div>
-        )
+        );
     }
 }
