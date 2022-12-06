@@ -21,13 +21,11 @@ const useStyles = makeStyles((theme) => ({
       }
   }));
 
-export default function Comment(props) {
- 
+function Comment(props) {
     const {text, userId, userName} = props;
     const classes = useStyles();
 
     return(
-
         <CardContent className = {classes.comment}>
 
         <OutlinedInput
@@ -52,3 +50,6 @@ export default function Comment(props) {
 
     )
 }
+
+
+export default Comment;

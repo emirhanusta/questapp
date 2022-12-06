@@ -2,8 +2,7 @@ import React, {useState} from "react";
 import {FormControl, InputLabel, Input, Button, FormHelperText} from "@material-ui/core"
 import { useHistory } from "react-router";
 import { PostWithoutAuth } from "../../services/HttpService";
-
-export default function Auth() {
+function Auth() {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -33,7 +32,8 @@ export default function Auth() {
         sendRequest(path)
         setUsername("")
         setPassword("")
-        history.go("/auth")
+        console.log(localStorage)
+        //history.go("/auth")
     }
 
     return(
@@ -58,3 +58,5 @@ export default function Auth() {
         </FormControl>
     )
 }
+
+export default Auth;

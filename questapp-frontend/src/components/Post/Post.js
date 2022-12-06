@@ -107,11 +107,6 @@ function Post(props) {
       .catch((err) => console.log(err))
   }
 
-  const deleteLike = () => {
-    DeleteWithAuth("/likes/"+likeId)
-      .catch((err) => console.log(err))
-  }
-
   const checkLikes = () => {
     var likeControl = likes.find((like =>  ""+like.userId === localStorage.getItem("currentUser")));
     if(likeControl != null){
@@ -119,6 +114,12 @@ function Post(props) {
       setIsLiked(true);
     }
   }
+
+  const deleteLike = () => {
+    DeleteWithAuth("/likes/"+likeId)
+      .catch((err) => console.log(err))
+  }
+
   useEffect(() => {
     if(isInitialMount.current)
       isInitialMount.current = false;
