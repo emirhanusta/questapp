@@ -16,7 +16,7 @@ import com.project.questapp.entities.Like;
 import com.project.questapp.requests.LikeCreateRequest;
 import com.project.questapp.responses.LikeResponse;
 import com.project.questapp.services.LikeService;
- 
+
 @RestController
 @RequestMapping("/likes")
 public class LikeController {
@@ -26,20 +26,25 @@ public class LikeController {
 	public LikeController(LikeService likeService) {
 		this.likeService = likeService;
 	}
+
 	@GetMapping
-	public List<LikeResponse> getAllLikes(@RequestParam Optional<Long> userId,@RequestParam Optional<Long> postId){
-		return likeService.getAllLikesWithParam(userId,postId);
+	public List<LikeResponse> getAllLikes(@RequestParam Optional<Long> userId,
+										  @RequestParam Optional<Long> postId) {
+		return likeService.getAllLikesWithParam(userId, postId);
 	}
+
+	@PostMapping
+	public Like createOneLike(@RequestBody LikeCreateRequest request) {
+		return likeService.createOneLike(request);
+	}
+
 	@GetMapping("/{likeId}")
 	public Like getOneLike(@PathVariable Long likeId) {
 		return likeService.getOneLikeById(likeId);
 	}
-	@PostMapping
-	public Like createOneLike(@RequestBody LikeCreateRequest likeRequest) {
-		return likeService.createOneLike(likeRequest);
-	}
+
 	@DeleteMapping("/{likeId}")
-	public void deleteOnelike(@PathVariable Long likeId) {
-		 likeService.deleteOneLikeById(likeId);
+	public void deleteOneLike(@PathVariable Long likeId) {
+		likeService.deleteOneLikeById(likeId);
 	}
 }

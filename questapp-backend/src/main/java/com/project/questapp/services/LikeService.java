@@ -20,7 +20,8 @@ public class LikeService {
 	private UserService userService;
 	private PostService postService;
 
-	public LikeService( UserService userService, PostService postService, LikeRepository likeRepository) {
+	public LikeService(LikeRepository likeRepository, UserService userService,
+					   PostService postService) {
 		this.likeRepository = likeRepository;
 		this.userService = userService;
 		this.postService = postService;
@@ -39,8 +40,8 @@ public class LikeService {
 		return list.stream().map(like -> new LikeResponse(like)).collect(Collectors.toList());
 	}
 
-	public Like getOneLikeById(Long likeId) {
-		return likeRepository.findById(likeId).orElse(null);
+	public Like getOneLikeById(Long LikeId) {
+		return likeRepository.findById(LikeId).orElse(null);
 	}
 
 	public Like createOneLike(LikeCreateRequest request) {
@@ -52,12 +53,13 @@ public class LikeService {
 			likeToSave.setPost(post);
 			likeToSave.setUser(user);
 			return likeRepository.save(likeToSave);
-		}else		
+		}else
 			return null;
 	}
 
 	public void deleteOneLikeById(Long likeId) {
 		likeRepository.deleteById(likeId);
 	}
+
 
 }

@@ -2,6 +2,7 @@ package com.project.questapp.responses;
 
 import java.util.List;
 
+import com.project.questapp.entities.Like;
 import com.project.questapp.entities.Post;
 
 import lombok.Data;
@@ -15,7 +16,7 @@ public class PostResponse {
 	String title;
 	String text;
 	List<LikeResponse> postLikes;
-	
+
 	public PostResponse(Post entity, List<LikeResponse> likes) {
 		this.id = entity.getId();
 		this.userId = entity.getUser().getId();

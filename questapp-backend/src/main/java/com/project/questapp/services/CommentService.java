@@ -22,8 +22,8 @@ public class CommentService {
 	private UserService userService;
 	private PostService postService;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, 
-			PostService postService) {
+	public CommentService(CommentRepository commentRepository, UserService userService,
+						  PostService postService) {
 		this.commentRepository = commentRepository;
 		this.userService = userService;
 		this.postService = postService;
@@ -57,7 +57,7 @@ public class CommentService {
 			commentToSave.setText(request.getText());
 			commentToSave.setCreateDate(new Date());
 			return commentRepository.save(commentToSave);
-		}else		
+		}else
 			return null;
 	}
 
@@ -74,6 +74,6 @@ public class CommentService {
 	public void deleteOneCommentById(Long commentId) {
 		commentRepository.deleteById(commentId);
 	}
-	
-	
+
+
 }
