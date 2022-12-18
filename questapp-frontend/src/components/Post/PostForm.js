@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
       }),
     },
     avatar: {
-        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+        background: '#2E3B55',
     },
     link: {
         textDecoration : "none",
@@ -127,7 +127,7 @@ function PostForm(props) {
                         <InputAdornment position = "end">
                         <Button
                         variant = "contained"
-                        style = {{background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                        style = {{background: '#2E3B55',
                         color: 'white'}}
                         onClick = {handleSubmit}
                         >Post</Button>

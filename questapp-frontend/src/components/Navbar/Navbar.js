@@ -40,10 +40,10 @@ function Navbar() {
     }
     return(
         <div>
-        <AppBar position="static">
+        <AppBar position="static" style={{ background: '#2E3B55' }}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
+          
           </IconButton>
           <Typography variant="h6" className={classes.title}>
           <Link className={classes.link} to="/">Home</Link>
